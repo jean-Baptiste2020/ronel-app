@@ -16,3 +16,21 @@ TwitterClone_Ruby_On_Rails_Project:
 
 Now run the server:
 =>rails s
+
+
+2.Rails scaffolding is a quick way to generate some of the major pieces of an application. If you want to create the models, views, and controllers for a new resource in a single operation, scaffolding is the tool for the job.
+=>rails g scaffold Tweeet tweeet:text
+
+=>rails db:migrate
+
+=>git add .
+=>git commit -m "Scaffold Tweet"
+
+
+
+
+
+
+
+
+
