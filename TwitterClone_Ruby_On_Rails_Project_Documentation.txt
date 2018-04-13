@@ -1,0 +1,18 @@
+TwitterClone_Ruby_On_Rails_Project:
+
+1.At first create the project by run this command in Command prompt with ruby on rails:
+=>rails new TwitterClone_Ruby_On_Rails_Project
+=>cd TwitterClone_Ruby_On_Rails_Project
+
+=>git init
+
+=>git status
+
+=>git add .
+
+=>git status
+
+=>git commit -m "Initial commit"
+
+Now run the server:
+=>rails s
