@@ -27,10 +27,114 @@ Now run the server:
 =>git commit -m "Scaffold Tweet"
 
 
+3.Now Added this code in config>routes.rb:
+
+root "tweeets#index"
+
+Here we fall in a error problem:
+ExecJS::ProgramError in Tweeets#index
+
+[   <%= stylesheet_link_tag    'application', media: 'all',
+'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track':
+'reload' %>   ]= This code is situated in layouts=>application.html.erb
+For this code we fall in a error problem:
+"ExecJS::ProgramError in Docs#show"
+
+now how to Solve:
+Added this in the "Gemfile":
+#For Windows it works with CofferScript v1.8
+gem 'coffee-script-source', '1.8.0'
+
+and then:
+=>bundle update coffee-script-source
+
+now restart rails server.
+
+Added the Gemfile:
+https://rubygems.org/gems/better_errors/versions/2.4.0
+[Provides a better error page for Rails and other Rack apps. Includes source code inspection, a live REPL and local/instance variable inspection for all stack frames.]
+
+group :development do
+gem 'better_errors', '~> 2.4'
+
+https://rubygems.org/gems/guard/versions/2.14.2
+[Guard is a command line tool to easily handle events on file system modifications.]
+
+group :development do
+gem 'guard', '~> 2.14', '>= 2.14.2'
+
+https://rubygems.org/gems/guard-livereload/versions/2.5.2
+[Guard::LiveReload automatically reloads your browser when 'view' files are modified.]
+
+group :development do
+gem 'guard-livereload', '~> 2.5', '>= 2.5.2', require: false
+
+=>bundle
+
+#Add guard definition to your Guardfile by running this command:
+=>guard init livereload
+[after run this command we shown that like "GEMFILE" also create a "Guardfile" in our project.]
+
+https://rubygems.org/gems/bulma-rails/versions/0.6.2
+[A modern CSS framework based on Flexbox]
+
+gem 'bulma-rails', '~> 0.6.2'
+
+https://rubygems.org/gems/simple_form/versions/4.0.0
+[Forms made easy!]
+
+gem 'simple_form', '~> 4.0'
+
+=>bundle
 
 
+4.Now Rename assets>stylesheets>application.css
+to "application.scss"  and delete "scaffold.scss"
+
+in "application.scss" add this code:
+
+@import "bulma";
 
 
+Run the generator:
+=>rails generate simple_form:install
 
 
+https://rubygems.org/gems/gravatar_image_tag/versions/1.2.0
+[A configurable and documented Rails view helper for adding gravatars into your Rails application.]
 
+gem 'gravatar_image_tag', '~> 1.2'
+
+
+https://rubygems.org/gems/devise/versions/4.4.3
+[Flexible authentication solution for Rails with Warden]
+
+gem 'devise', '~> 4.4', '>= 4.4.3'
+
+You need to run the generator:
+=>rails generate devise:install
+
+
+added this code in config>environments>development.rb:
+
+# Devise defauls url
+config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+
+
+Added this code in views>layouts>application.html.erb:
+
+  	<% if flash[:notice] %>
+  		<div class="notification is-primary global-notification">
+  			<p class="notice"><%= notice %></p>
+  		</div>
+  	<% end %>
+  	<% if flash[:alert] %>
+  		<div class="notification is-danger global-notification">
+  			<p class="alert"><%= alert %></p>
+  		</div>
+  	<% end %>
+	
+	
+And run this:
+=>rails g devise:views
