@@ -1,8 +1,8 @@
 TwitterClone_Ruby_On_Rails_Project:
 
 1.At first create the project by run this command in Command prompt with ruby on rails:
-=>rails new TwitterClone_Ruby_On_Rails_Project
-=>cd TwitterClone_Ruby_On_Rails_Project
+=>rails new 
+=>cd TwitterClone_Ruby_On_Rails_ProjectTwitterClone_Ruby_On_Rails_Project
 
 =>git init
 
@@ -138,3 +138,270 @@ Added this code in views>layouts>application.html.erb:
 	
 And run this:
 =>rails g devise:views
+
+
+5.Added this code in layouts>application.html.erb:
+
+<nav class="navbar is-info">
+	<div class="navbar-brand">
+		<%= link_to root_path, class: "navbar-item" do %>
+		<h1 class="title is-5">Twittter</h1>
+		<% end %>
+		<div class="navbar-burger burger" data-target="navbarExample">
+			<span></span>
+			<span></span>
+			<span></span>
+	</div>
+</div>
+
+<div id="navbarExample", class="navbar-menu">
+	<div class="navbar-end">
+		<div class="field is-grouped">
+			<p class="control">
+				<%= link_to "New Tweeet", new_tweeet_path, class: "button is-info is-inverted" %>
+			</p>
+			<p class="control">Sign Up</p>
+		</div>
+	</div>
+</div>
+</nav>
+
+
+Now,
+=>rake routes
+
+
+Added this code in stylesheets>application.scss:
+
+.navbar-brand .title {
+	color: white;
+}
+
+//round images
+.image {
+	border-radius: 50%
+	img {
+		border-radius: 50%
+	}
+}
+
+.notifications:not(:last-child) {
+	margin-bottom: 0;
+}
+
+
+then run:
+=>bundle exec guard
+
+
+Added this code in tweeets>index.html.erb:
+before added cut the all code and then add:
+
+<section class="section">
+  <div class="container">
+    <div class="columns">
+      <%= render 'feed' %>
+    </div>
+  </div>
+</section>
+
+
+
+in tweeets_controller.rd:
+write this code:
+@tweeets = Tweeet.all.order("created_at DESC")
+
+
+now create _feed.html.erb file in tweeets:
+and write this code:
+
+<div class="column is-half">
+	<article class="media box">
+		<figure class="media-left">
+			<p class="image is-64X64">
+				<img src="https://bulma.io/images/placeholder/64X64.png">
+			</p>
+		</figure>
+		<div class="media-content">
+			
+		</div>
+	</article>
+</div>
+
+<% @tweeets.each do | tweeet | %>
+	<div class="box">
+		<article class="media">
+			<div class="media-left">
+				<figure class="image is-64X64">
+					<img src="https://bulma.io/images/placeholder/64X64.png">
+				</figure>
+			</div>
+			<div class="media-content">
+				<div class="content">
+					<strong>Biplob World</strong><br />
+					<small>@marketerbiplob</small><br />
+					<p><%= tweeet.tweeet %></p>
+				</div>
+				
+				
+				<nav class="level">
+	  				<div class="level-left is-mobile">
+	  					<%= link_to tweeet, class: "level-item" do %>
+	  					  <span class="icon"><i class="fa fa-link" aria-hidden="true"></i></span>
+	  					<% end %>
+						<%= link_to edit_tweeet_path(tweeet), class: "level-item" do %>
+						  <span class="icon"><i class="fa fa-pencil" aria-hidden="true"></i></span>
+						<% end %>
+						<%= link_to tweeet, method: :delete, data: { confirm: "Are you sure you want to delete this tweeet?" } do %>
+						   <span class="icon"><i class="fa fa-trash-o" aria-hidden="true"></i></span>
+						<% end %>
+	  				</div>
+  				</nav>
+			</div>
+		</article>
+	</div>
+<% end %>
+
+
+
+
+
+Added this CDN in layouts>application.html.erb:
+
+<%= stylesheet_link_tag "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" %> 
+
+
+
+
+Added this code in tweeets>index.html.erb:
+
+      <%= render 'who-to-follow' %>
+
+	  
+now create _who-to-follow.html.erb file in tweeets:
+and write this code:
+
+<div class="column">
+	<nav class="panel">
+		<p class="panel-heading">Who to Follow</p>
+	
+	<div class="panel-block">
+		<article class="media">
+			<div class="media-left">
+				<figure class="image is-32x32">
+					<img src="https://bulma.io/images/placeholders/64x64.png">
+				</figure>
+			</div>
+			<div class="media-content">
+				<div class="content">
+					<p>
+						<strong>Biplob World</strong>
+						<small>@marketerbiplob</small>
+					</p>
+				</div>
+			</div>
+		</article>
+	</div>
+		<div class="panel-block">
+		<article class="media">
+			<div class="media-left">
+				<figure class="image is-32x32">
+					<img src="https://bulma.io/images/placeholders/64x64.png">
+				</figure>
+			</div>
+			<div class="media-content">
+				<div class="content">
+					<p>
+						<strong>Biplob World</strong>
+						<small>@marketerbiplob</small>
+					</p>
+				</div>
+			</div>
+		</article>
+	</div>
+		<div class="panel-block">
+		<article class="media">
+			<div class="media-left">
+				<figure class="image is-32x32">
+					<img src="https://bulma.io/images/placeholders/64x64.png">
+				</figure>
+			</div>
+			<div class="media-content">
+				<div class="content">
+					<p>
+						<strong>Biplob World</strong>
+						<small>@marketerbiplob</small>
+					</p>
+				</div>
+			</div>
+		</article>
+	</div>
+	</nav>
+</div>
+
+
+
+
+Added this code in tweeets>index.html.erb:
+
+      <%= render 'trends' %>
+	  
+	  
+Now create _trends.html.erb file in tweeets:
+and write this code:
+
+<div class="column is-one-quarter">
+	<nav class="panel">
+		<p class="panel-heading">Trends</p>
+		<a class="panel-block">
+			Trend 1
+		</a>
+		<a class="panel-block">
+			Trend 2
+		</a>
+		<a class="panel-block">
+			Trend 3
+		</a>
+		<a class="panel-block">
+			Trend 4
+		</a>
+		<a class="panel-block">
+			Trend 5
+		</a>
+		<a class="panel-block">
+			Trend 6
+		</a>
+	</nav>
+</div>
+
+
+
+
+now added this code in tweeets>_feed.html.erb:
+
+<div class="media-content">
+	<%= render 'tweeets/form' %>
+</div>
+
+
+
+
+now added this code in tweeets>_form.html.erb  before cut all code and then add:
+<%= simple_form_for(@tweeet) do |f| %>
+<%= f.error_notification %>
+<div class="field">
+  <div class="control">
+    <%= f.input :tweeet, label: "Tweeet about it", input_html: { class: "textarea "}, wrapper: false, label_html: {class: "label"}, placeholder: "Compose a new tweeet...", autofocus: true %>
+  </div>
+</div>
+<%= f.button :submit, class: "button is-info" %>
+<% end %>
+
+
+
+in tweeets.controllers added this code;
+
+  def index
+  #if we don't add this code, ERROR shown "undefined method `model_name' for nil:NilClass"
+    @tweeet = Tweeet.new      
+  end

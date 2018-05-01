@@ -4,7 +4,9 @@ class TweeetsController < ApplicationController
   # GET /tweeets
   # GET /tweeets.json
   def index
-    @tweeets = Tweeet.all
+    @tweeets = Tweeet.all.order("created_at DESC")
+    @tweeet = Tweeet.new
+    #if we don't add this code, ERROR shown "undefined method `model_name' for nil:NilClass"
   end
 
   # GET /tweeets/1
