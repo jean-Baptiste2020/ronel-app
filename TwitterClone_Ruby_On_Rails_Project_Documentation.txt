@@ -430,3 +430,694 @@ in tweeets.controllers added this code;
 Now,
 =>rails generate devise User
 =>rails db:migrate
+
+
+=>rake routes
+
+Now run this URL :
+http://localhost:3000/users/sign_up   successfully runned
+
+
+Added this code in tweeets_controller.rb:
+before_action :authenticate_user!, except: [:index, :show]
+
+
+Now Create a controllers:
+registrations_controller.rb  and write this code:
+
+class RegistrationsController < Devise::RegistrationsController
+
+	private
+
+	def sign_up_params
+		params.require(:user).permit(:name, :username, :email, :password, :password_confirmation)
+	end
+
+
+	def acount_update_params
+		params.require(:user).permit(:name, :username, :email, :password, :password_confirmation, :current_password)
+	end
+	
+end
+
+
+=>rails g migration AddFieldsToUsers
+and added this code in 20180506222752_add_fields_to_users.rb:
+  def change
+  	add_column :users, :name, :string
+  	add_column :users, :username, :string
+  	add_index :users, :username, unique: true
+  end
+  
+  
+=>rails db:migrate
+
+
+
+Now Design the sign_up Form: So cut previous code and added this full code in App/views/devise/registrations/new.html.erb:
+
+<div class="section">
+	<div class="container">
+	<div class="columns is-centered">
+
+		<div class="column is-4">
+			<h2 class="title is-2">Sign Up</h2>
+
+			<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+			  <%= f.error_notification %>
+
+
+			  	<div class="field">
+			    	<div class="control">	 
+			        <%= f.input :name, required: true, autofocus: true, input_html: { class:"input"}, wrapper: false, label_html: { class:"label" } %>	        
+			    	</div>
+			    </div>
+
+			    <div class="field">
+			    	<div class="control">	 
+			        <%= f.input :username, required: true, input_html: { class:"input"}, wrapper: false, label_html: { class:"label" } %>	        
+			    	</div>
+			    </div>
+
+
+			    <div class="field">
+			    	<div class="control">	 
+			        <%= f.input :email, required: true, input_html: { class:"input"}, wrapper: false, label_html: { class:"label" } %>	        
+			    	</div>
+			    </div>
+
+			    <div class="field">
+			    	<div class="control">
+			    		<%= f.input :password, required: true, input_html: { class:"input"}, wrapper: false, label_html: { class:"label" }, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length) %>
+			    	</div>
+			    </div>
+
+			    <div class="field">
+			    	<div class="control">
+			    		<%= f.input :password_confirmation, required: true, input_html: { class: "input"}, wrapper: false, label_html: { class: "label"} %>
+			    	</div>
+			    </div>
+
+
+
+			    <div class="field">
+			    	<div class="control">
+			   		 	<%= f.button :submit, "Sign up", class:"button is-info is-medium" %>
+			   		 </div>
+			    </div>
+
+			<% end %>
+			<br />
+			<%= render "devise/shared/links" %>
+		</div>
+	</div>
+	</div>
+</div> 
+
+
+
+Now Design the Update Form: So cut previous code and added this full code in app/views/devise/registrations/edit.html.erb:
+
+<!-- app/views/devise/registrations/edit.html.erb -->
+
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-4">
+
+      <h2 class="title is-2">Edit <%= resource_name.to_s.humanize %></h2>
+      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+        <%= f.error_notification %>
+
+          <div class="field">
+            <div class="control">
+              <%= f.input :name, required: true, autofocus: true, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <%= f.input :username, required: true,  input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <%= f.input :email, required: true, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+            </div>
+          </div>
+
+          <div class="field">
+          <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+            <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
+          <% end %>
+          </div>
+
+          <div class="field">
+            <div class="control">
+            <%= f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+            <%= f.input :password_confirmation, required: false, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <%= f.input :current_password, hint: "we need your current password to confirm your changes", required: true, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+            </div>
+        </div>
+
+        <%= f.button :submit, "Update", class:"button is-info" %>
+
+      <% end %>
+
+        <hr />
+        <h3 class="title is-5">Cancel my account</h3>
+        <p>Unhappy? <%= link_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+Now Design the Log in Form: So cut previous code and added this full code in 
+app/views/devise/sessions/new.html.erb:
+
+<section class="section">
+	<div class="container">
+		<div class="columns is-centered">
+			<div class="column is-4">
+				<h2 class="title is-2">Log in</h2>
+				<%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+
+				  <div class="field">
+				  	<div class="control">
+				    	<%= f.input :email, required: false, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+				    </div>
+				  </div>
+
+				  <div class="field">
+				  	<div class="control">
+				    <%= f.input :password, required: false, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+						</div>
+					</div>
+
+					<div class="field">
+				  	<div class="control">
+				    <%= f.input :remember_me, wrapper: false, as: :boolean if devise_mapping.rememberable? %>
+				  	</div>
+					</div>
+
+				  <%= f.button :submit, "Log in", class:"button is-info is-medium" %>
+				<% end %>
+				<br/>
+				<%= render "devise/shared/links" %>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+
+Now Design the Change your password Form: So cut previous code and added this full code in 
+app/views/devise/passwords/edit.html.erb:
+
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-4">
+
+        <h2 class="title is-2">Change your password</h2>
+
+        <%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+          <%= f.error_notification %>
+
+          <%= f.input :reset_password_token, as: :hidden %>
+          <%= f.full_error :reset_password_token %>
+
+          <div class="field">
+            <div class="control">
+            <%= f.input :password, label: "New password", required: true, autofocus: true, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" }, hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length) %>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+            <%= f.input :password_confirmation, label: "Confirm your new password", input_html: { class: "input"}, wrapper: false, label_html: { class: "label" }, required: true %>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <%= f.button :submit, "Change my password" %>
+          </div>
+        <% end %>
+
+        <%= render "devise/shared/links" %>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+Now Design the Forgot your password Form: So cut previous code and added this full code in 
+app/views/devise/passwords/new.html.erb:
+
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-4">
+        
+				<h2 class="title is-2">Forgot your password?</h2>
+
+				<%= simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+				  <%= f.error_notification %>
+
+					<div class="field">
+            <div class="control">
+				    <%= f.input :email, required: true, autofocus: true, input_html: { class: "input"}, wrapper: false, label_html: { class: "label" } %>
+				  	</div>
+					</div>
+				  
+				  <%= f.button :submit, "Send me reset password instructions", class:"button is-info" %>
+				  
+				<% end %>
+				<br />
+				<%= render "devise/shared/links" %>
+
+    </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+Now Design the Resend confirmation instructions: So cut previous code and added this full code in 
+app/views/devise/confirmations/new.html.erb:
+
+<h2>Resend confirmation instructions</h2>
+
+<%= simple_form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+  <%= f.error_notification %>
+  <%= f.full_error :confirmation_token %>
+
+  <div class="form-inputs">
+    <%= f.input :email, required: true, autofocus: true %>
+  </div>
+
+  <div class="form-actions">
+    <%= f.button :submit, "Resend confirmation instructions" %>
+  </div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+
+
+
+
+
+
+Now Write this code in models>tweeet.rb:
+class Tweeet < ApplicationRecord
+	belongs_to :user
+end
+
+
+
+
+Also Write this code in models>user.rb:
+
+  has_many :tweeets
+  
+  
+  
+Now create another migration:
+=>rails g migration AddUserIdToTweeets user_id:integer
+  
+=>rails db:migrate 
+  
+Open the rails console:
+=>rails c  
+  
+=>@user = User
+=>User.connection
+=>@user
+=>@tweeet = Tweeet
+  
+for console terminate:
+=>ctrl + c
+=>exit
+
+
+
+instead of Tweeet.new write  current_user.tweeets.build   in tweeets_controller.rb:
+
+def new
+	@tweeet = current_user.tweeets.build	
+end  
+
+def create
+    @tweeet = current_user.tweeets.build(tweeet_params)
+  
+  
+  
+  
+Now We Faced this ERROR:
+  "cannot load such file -- 2.3/bcrypt_ext"
+When we create an user account that time this ERROR occur:
+  
+Follow this step to solve this error:
+
+$ gem list bcrypt
+bcrypt (3.1.11 x86-mingw32)
+
+$ gem uninstall devise && gem uninstall bcrypt
+Successfully uninstalled devise-4.2.0
+Successfully uninstalled bcrypt-3.1.11-x86-mingw32
+
+$ gem install bcrypt --platform=Ruby
+Temporarily enhancing PATH to include DevKit...
+Building native extensions.  This could take a while...
+Successfully installed bcrypt-3.1.11
+Parsing documentation for bcrypt-3.1.11
+Installing ri documentation for bcrypt-3.1.11
+Done installing documentation for bcrypt after 1 seconds
+1 gem installed
+
+$ gem list bcrypt
+bcrypt (3.1.11)
+
+$ bundle install
+...
+Installing bcrypt 3.1.11 (x86-mingw32)
+...
+Installing devise 4.2.0
+Bundle complete! 25 Gemfile dependencies, 75 gems now installed.
+
+$ gem list bcrypt
+bcrypt (3.1.11 ruby x86-mingw32)
+
+$ gem uninstall bcrypt
+Select gem to uninstall:
+ 1. bcrypt-3.1.11
+ 2. bcrypt-3.1.11-x86-mingw32
+ 3. All versions
+> 2
+Successfully uninstalled bcrypt-3.1.11-x86-mingw32
+
+$ gem list bcrypt
+bcrypt (3.1.11)
+  
+  
+  
+  
+  
+  
+Now GO to again rails console:
+=>rails c 
+=>@user = User
+=>User.connection
+=>@user.last
+shown last created account mail but name and username don't show.For solve this problem we modify our routes:
+
+devise_for :users, :controllers => { registrations: 'registrations' }
+
+=>@user = @user.last
+=>@user.destroy
+=>@user = User
+=>@user.all
+
+Delete the created user.
+
+http://localhost:3000/users/sign_up
+
+Now again sign in and again do the same task:
+=>@user = User
+=>user.connection
+=>@user.all
+
+Now showing name and username.
+
+
+=>rails c 
+=>@tweeet = Tweeet
+=>Tweeet.connection
+=>@tweeet.all
+=>@user = User
+=>@user.last
+
+
+
+
+
+
+7.In  views>tweeets>_feed.html.erb  edit this code:
+
+<div class="media-content">
+				<div class="content">
+					<strong>Biplob World</strong><br />
+					<small>@marketerbiplob</small><br />
+					<p><%= tweeet.tweeet %></p>
+				</div>
+				
+Replace the code:
+<div class="media-content">
+				<div class="content">
+					<strong><%= tweeet.user.name %></strong><br />
+					<small><%= tweeet.user.username %></small><br />
+					<p><%= tweeet.tweeet %></p>
+				</div>
+				
+				
+				
+				
+				
+				
+				
+In  app/views/layouts/application.html.erb  edit this code:
+				
+ <div id="navbarExample", class="navbar-menu">
+        <div class="navbar-end">
+          <div class="field is-grouped">
+            <p class="control">
+              <%= link_to "New Tweeet", new_tweeet_path, class: "button is-info is-inverted" %>
+            </p>
+            <p class="control">Sign Up</p>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <%= yield %>
+  </body>
+</html>
+
+Replace the code:
+
+<div id="navbarExample" class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-item">
+          <div class="field is-grouped">
+            <p class="control">
+              <%= link_to 'New Tweeet', root_path, class: "button is-info is-inverted" %>
+            </p>
+            <% if user_signed_in? %>
+              <p class="control">
+                <%= link_to current_user.name, edit_user_registration_path, class: "button is-info" %>
+              </p>
+              <p>
+                <%= link_to "Logout", destroy_user_session_path, method: :delete, class: "button is-info" %>
+              </p>
+            <% else %>
+            <p class="control">
+              <%= link_to 'Sign In', new_user_session_path, class: "button is-info" %>
+            </p>
+            <p class="control">
+              <%= link_to 'Sign Up', new_user_registration_path, class: "button is-info" %>
+            </p>
+            <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <%= yield %>
+  </body>
+</html>
+
+
+
+
+
+
+Bind this code in this 2 line app/views/tweeets/_feed.html.erb:
+<% if user_signed_in? %>
+<% end %>
+
+<% if user_signed_in? %>
+	<article class="media box">
+		<figure class="media-left">
+			<p class="image is-64X64">
+				<img src="https://bulma.io/images/placeholder/64X64.png">
+			</p>
+		</figure>
+		<div class="media-content">
+			 <%= render 'tweeets/form' %>
+		</div>
+	</article>
+<% end %>
+
+
+
+
+
+
+Now added if, else, end code and also create a file _profile.html.erb in app/views/tweeets/index.html.erb:
+
+    	<% if user_signed_in? %>
+    	<% render 'profile' %>
+    	<% else %>
+      <%= render 'trends' %>
+      <% end %>
+      <%= render 'feed' %>
+      <%= render 'who-to-follow' %>
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+Now added this code in app/views/tweeets/_profile.html.erb:
+
+<div class="column is-one-quarter">
+	<nav class="panel">
+		<p class="panel-heading">Profile</p>
+		<div class="panel-block">
+			<article class="media">
+				<div class="media-left">
+					<figure class="image is-64x64">
+					<!--	<img src="https://steemitimages.com/DQmNnAYTuBy85wVpwZGrcdp7BVRmWCMpTZaHs46tdq3EtRn/cutmypic.png">  -->
+					<%= gravatar_image_tag(current_user.email, size: 64, alt: current_user.name) %>
+					</figure>
+				</div>
+
+				<div class="media-content">
+					<div class="content">
+						<p>
+							<strong><%= current_user.name %></strong><br />
+							<small><%= current_user.username %></small>
+						</p>
+					</div>
+				</div>
+			</article>
+		</div>
+		<div class="panel-block">
+			<div class="level is-mobile">
+				<div class="level-item has-centered-text">
+					<div>
+						<p class="heading">Tweeets</p>
+						<p class="title is-6"><%= current_user.tweeets.count %></p>
+					</div>
+				</div>
+
+				<div class="level-item has-centered-text">
+					<div>
+						<p class="heading">Following</p>
+						<p class="title is-6">123</p>
+					</div>
+				</div>
+
+				<div class="level-item has-centered-text">
+					<div>
+						<p class="heading">Followers</p>
+						<p class="title is-6">465K</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+</div>
+
+
+
+
+
+
+Use this 2 image link instead of previous link in app/views/tweeets/_feed.html.erb:
+
+<%= gravatar_image_tag(current_user.email, size: 64, alt: current_user.name) %>
+
+<%= gravatar_image_tag(tweeet.user.email, size: 64, alt: tweeet.user.name) %>
+
+
+
+
+
+Now Refresh the previous code and added this code in app/views/tweeets/edit.html.erb:
+
+<div class="section">
+	<div class="container">
+		<div class="columns is-centered">
+			<div class="column is-half">
+				<h1 class="title">Editing Tweeet</h1>
+				<%= render 'form', tweeet: @tweeet %>
+			</div>
+		</div>
+	</div>
+</div>
+
+<nav class="navbar is-fixed-bottom">
+	<div class="navbar-menu">
+		<div class="navbar-item">
+			<div class="field is-grouped">
+				<p class="control">
+					<%= link_to 'Cancel', tweeets_path, class: "button is-dark" %>
+				</p>
+		</div>
+	</div>
+</nav>
+
+
+
+
+
+
+Now Refresh the previous code and added this code in app/views/tweeets/new.html.erb:
+<div class="section">
+	<div class="container">
+		<div class="columns is-centered">
+			<div class="column is-half">
+				<h1 class="title">Create a new Tweeet</h1>
+					<%= render 'form', tweeet: @tweeet %>
+			</div>
+		</div>
+	</div>
+</div>
+
+<nav class="navbar is-fixed-bottom">
+	<div class="navbar-menu">
+		<div class="navbar-item">
+			<div class="field is-grouped">
+				<p class="control">
+					<%= link_to 'Cancel', tweeets_path, class: "button is-dark" %>
+				</p>
+		</div>
+	</div>
+</nav>
+
+Successfully Complete.....
