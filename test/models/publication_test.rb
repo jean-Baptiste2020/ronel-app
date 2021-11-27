@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TweeetTest < ActiveSupport::TestCase
+class PublicationTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end
